@@ -28,8 +28,8 @@ public class GoRestUserTests {
 
 
         requestBody = new HashMap<>();
-        requestBody.put("name", "TestUser from TechnoStudy");
-        requestBody.put("email", "testuser1243@technostudy.com");
+        requestBody.put("name", "TestUser TechnoStudy");
+        requestBody.put("email", "testuser@ts.com");
         requestBody.put("gender", "male");
         requestBody.put("status", "active");
 
@@ -61,6 +61,38 @@ public class GoRestUserTests {
                 .then()
                 .log().body()
                 .statusCode(422);
+
+    }
+
+    @Test(dependsOnMethods = "createUserNegativeTest")
+    public void editUserTest() {
+
+        String newName = "Updated Name";
+
+        Map<String, String> updatedData = new HashMap<>();
+        updatedData.put("name", newName);
+
+        given()
+                .spec(reqSpec)
+                .body(updatedData)
+                .when()
+                .put("/public/v2/users/" + id )
+                .then()
+                .body("name", equalTo(newName))
+                .statusCode(200);
+
+    }
+
+    @Test
+    public void deleteUserTest() {
+
+        given()
+                .spec(reqSpec)
+                .when()
+                .delete("/public/v2/users/" + id)
+                .then()
+                .log().body()
+                .statusCode(204);
 
     }
 
