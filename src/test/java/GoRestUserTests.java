@@ -14,6 +14,7 @@ public class GoRestUserTests {
 
     private RequestSpecification reqSpec;
     private Map<String, String> requestBody;
+    private Object id;
 
     @BeforeClass
     public void setup() {
@@ -27,8 +28,8 @@ public class GoRestUserTests {
 
 
         requestBody = new HashMap<>();
-        requestBody.put("name", "TestUser from TS");
-        requestBody.put("email", "testuser@technostudy.com");
+        requestBody.put("name", "TestUser from TechnoStudy");
+        requestBody.put("email", "testuser1243@technostudy.com");
         requestBody.put("gender", "male");
         requestBody.put("status", "active");
 
@@ -37,13 +38,29 @@ public class GoRestUserTests {
     @Test
     public void createUserTest() {
 
+        id = given()
+                .spec(reqSpec)
+                .body(requestBody)
+                .when()
+                .post("/public/v2/users")
+                .then()
+                .log().body()
+                .statusCode(201)
+                .extract().path("id");
+
+    }
+
+    @Test(dependsOnMethods = "createUserTest")
+    public void createUserNegativeTest() {
+
         given()
                 .spec(reqSpec)
                 .body(requestBody)
                 .when()
                 .post("/public/v2/users")
                 .then()
-                .statusCode(201);
+                .log().body()
+                .statusCode(422);
 
     }
 
