@@ -83,7 +83,7 @@ public class GoRestUserTests {
 
     }
 
-    @Test
+    @Test(dependsOnMethods = "editUserTest")
     public void deleteUserTest() {
 
         given()
