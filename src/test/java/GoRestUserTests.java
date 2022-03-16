@@ -29,7 +29,7 @@ public class GoRestUserTests {
 
         requestBody = new HashMap<>();
         requestBody.put("name", "TestUser TechnoStudy");
-        requestBody.put("email", "testuser@ts.com");
+        requestBody.put("email", "testuser@techno.com");
         requestBody.put("gender", "male");
         requestBody.put("status", "active");
 
