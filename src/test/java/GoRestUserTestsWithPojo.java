@@ -28,7 +28,7 @@ public class GoRestUserTestsWithPojo {
 
         user = new GoRestUser();
         user.setName("TestUser by TS");
-        user.setEmail("tsuser121133@techno.study");
+        user.setEmail("tsuser1223@techno.study");
         user.setGender("female");
         user.setStatus("active");
 
@@ -99,5 +99,30 @@ public class GoRestUserTestsWithPojo {
                 .body("name", equalTo(newName));
 
     }
+
+    @Test(dependsOnMethods = "editUserTest")
+    public void deleteUserTest() {
+
+        given()
+                .spec(reqSpec)
+                .when()
+                .delete("/public/v2/users/" + user.getId())
+                .then()
+                .statusCode(204);
+
+    }
+
+    @Test(dependsOnMethods = "deleteUserTest")
+    public void deleteUserNegativeTest() {
+
+        given()
+                .spec(reqSpec)
+                .when()
+                .delete("/public/v2/users/" + user.getId())
+                .then()
+                .statusCode(404);
+
+    }
+
 
 }
