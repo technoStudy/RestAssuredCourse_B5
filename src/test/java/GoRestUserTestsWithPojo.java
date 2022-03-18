@@ -5,6 +5,9 @@ import org.testng.annotations.BeforeClass;
 import io.restassured.RestAssured;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
@@ -25,7 +28,7 @@ public class GoRestUserTestsWithPojo {
 
         user = new GoRestUser();
         user.setName("TestUser by TS");
-        user.setEmail("tsuser1@techno.study");
+        user.setEmail("tsuser121133@techno.study");
         user.setGender("female");
         user.setStatus("active");
 
@@ -46,7 +49,54 @@ public class GoRestUserTestsWithPojo {
                 .extract().jsonPath().getString("id")
         );
 
-        System.out.println("User ID: " + user.getId() + "!!!!!!!" );
+    }
+
+    @Test(dependsOnMethods = "createUserTest")
+    public void getUserTest() {
+
+        given()
+                .spec(reqSpec)
+                .when()
+                .get("/public/v2/users/" + user.getId())
+                .then()
+                .log().body()
+                .statusCode(200)
+                .body("name", equalTo(user.getName()))
+                .body("email", equalTo(user.getEmail()));
+
+    }
+
+    @Test(dependsOnMethods = "getUserTest")
+    public void createUserNegativeTest() {
+
+        given()
+                .spec(reqSpec)
+                .body(user)
+                .when()
+                .post("/public/v2/users")
+                .then()
+                .log().body()
+                .statusCode(422);
+
+    }
+
+    @Test(dependsOnMethods = "createUserNegativeTest")
+    public void editUserTest() {
+
+        String newName = "Updated Name by TS";
+
+        Map<String, String> editUserBody = new HashMap<>();
+        editUserBody.put("name", newName);
+
+        given()
+                .spec(reqSpec)
+                .body(editUserBody)
+                .when()
+                .put("/public/v2/users/" + user.getId())
+                .then()
+                .log().body()
+                .statusCode(200)
+                .body("name", equalTo(newName));
 
     }
 
